@@ -1,5 +1,6 @@
 package net.duhnnie.android.sunshine.app;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -46,7 +47,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute("http://api.openweathermap.org/data/2.5/forecast/daily?q=La%20Paz,bo&mode=json&units=metric&cnt=7");
+            new FetchWeatherTask().execute("La Paz", "BO");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -83,6 +84,21 @@ public class ForecastFragment extends Fragment {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
+        protected String getForecastURL (String city, String country) {
+            Uri.Builder url = new Uri.Builder();
+            url.scheme("http")
+                .authority("api.openweathermap.org")
+                .appendPath("data")
+                .appendPath("2.5")
+                .appendPath("forecast")
+                .appendPath("daily")
+                .appendQueryParameter("q", city + "," + country)
+                .appendQueryParameter("mode", "json")
+                .appendQueryParameter("units", "metric")
+                .appendQueryParameter("cnt", "7");
+            return url.toString();
+        }
+
         @Override
         protected String doInBackground (String... strings) {
             HttpURLConnection urlConnection = null;
@@ -90,7 +106,7 @@ public class ForecastFragment extends Fragment {
             String forecastJsonStr = null;
 
             try {
-                URL url = new URL(strings[0]);
+                URL url = new URL(getForecastURL(strings[0], strings[1]));
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

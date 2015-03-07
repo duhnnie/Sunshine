@@ -83,20 +83,16 @@ public class ForecastFragment extends Fragment {
     public class FetchWeatherTask extends AsyncTask<String, Void, String> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+        private final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
 
         protected String getForecastURL (String city, String country) {
-            Uri.Builder url = new Uri.Builder();
-            url.scheme("http")
-                .authority("api.openweathermap.org")
-                .appendPath("data")
-                .appendPath("2.5")
-                .appendPath("forecast")
-                .appendPath("daily")
+            Uri builtUri = Uri.parse(this.FORECAST_BASE_URL).buildUpon()
                 .appendQueryParameter("q", city + "," + country)
                 .appendQueryParameter("mode", "json")
                 .appendQueryParameter("units", "metric")
-                .appendQueryParameter("cnt", "7");
-            return url.toString();
+                .appendQueryParameter("cnt", "7")
+                .build();
+            return builtUri.toString();
         }
 
         @Override

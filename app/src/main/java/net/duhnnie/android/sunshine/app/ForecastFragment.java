@@ -126,7 +126,7 @@ public class ForecastFragment extends Fragment {
             final String OWM_DESCRIPTION = "main";
 
             JSONObject root = new JSONObject(forecastJsonStr);
-            JSONArray forecastArray = root.getJSONArray("list");
+            JSONArray forecastArray = root.getJSONArray(OWM_LIST);
 
             Time dayTime = new Time();
             dayTime.setToNow();

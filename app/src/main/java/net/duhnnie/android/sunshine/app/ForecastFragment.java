@@ -2,9 +2,11 @@ package net.duhnnie.android.sunshine.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.AlarmClock;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -28,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.PhantomReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -61,7 +64,10 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute("La Paz", "BO");
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String location = prefs.getString(getString(R.string.pref_location_key),
+                    getString(R.string.pref_location_default));
+            new FetchWeatherTask().execute(location);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,9 +115,9 @@ public class ForecastFragment extends Fragment {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
         private final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
 
-        protected String getForecastURL (String city, String country) {
+        protected String getForecastURL (String location) {
             Uri builtUri = Uri.parse(this.FORECAST_BASE_URL).buildUpon()
-                .appendQueryParameter("q", city + "," + country)
+                .appendQueryParameter("q", location)
                 .appendQueryParameter("mode", "json")
                 .appendQueryParameter("units", "metric")
                 .appendQueryParameter("cnt", "7")
@@ -189,14 +195,14 @@ public class ForecastFragment extends Fragment {
         }
 
         @Override
-        protected String[] doInBackground (String... strings) {
+        protected String[] doInBackground (String... string) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             String forecastJsonStr = null;
             int numDays = 7;
             String[] result;
             try {
-                URL url = new URL(getForecastURL(strings[0], strings[1]));
+                URL url = new URL(getForecastURL(string[0]));
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

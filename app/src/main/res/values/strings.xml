@@ -10,6 +10,6 @@
 
     <!--prefs-->
     <string name="pref_location_label">Location</string>
-    <string name="pref_location_key" translatable="false">Refresh</string>
+    <string name="pref_location_key" translatable="false">location</string>
     <string name="pref_location_default" translatable="false">La Paz,bo</string>
 </resources>

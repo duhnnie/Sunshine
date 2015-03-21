@@ -133,9 +133,21 @@ public class ForecastFragment extends Fragment {
             return shortenedDateFormat.format(time);
         }
 
+        private long convertToPreferredTempUnits(double temp) {
+            String prefUnitsKey = getString(R.string.pref_units_key);
+            String prefUnitsDefaultValue = getString(R.string.pref_units_default);
+            String preferredTempUnits = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(prefUnitsKey, prefUnitsDefaultValue);
+            if (preferredTempUnits.equals(getString(R.string.pref_units_metric))) {
+                return (long)temp;
+            } else {
+                return (long)(temp * 9 / 5) + 32;
+            }
+        }
+
         private String formatHighLows(double high, double low) {
-            long roundedHigh = Math.round(high);
-            long roundedLow = Math.round(low);
+            long roundedHigh = Math.round(convertToPreferredTempUnits(high));
+            long roundedLow = Math.round(convertToPreferredTempUnits(low));
 
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;

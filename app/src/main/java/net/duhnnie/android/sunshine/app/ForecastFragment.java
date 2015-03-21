@@ -73,11 +73,30 @@ public class ForecastFragment extends Fragment {
         updateWeather();
     }
 
+    public void showLocationOnMap() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        Uri geolocation = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", location)
+                .build();
+        newIntent.setData(geolocation);
+        if (newIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(newIntent);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            updateWeather();
+        switch (id) {
+            case R.id.action_refresh:
+                updateWeather();
+                break;
+            case R.id.action_map:
+                showLocationOnMap();
         }
         return super.onOptionsItemSelected(item);
     }

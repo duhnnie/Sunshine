@@ -1,17 +1,20 @@
 package net.duhnnie.android.sunshine.app;
 
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
-import android.widget.ShareActionProvider;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,16 +41,6 @@ public class DetailActivity extends ActionBarActivity {
         return true;
     }
 
-    private Intent getShareIntent() {
-        CharSequence textToShare = ((TextView) findViewById(R.id.detail_text)).getText()
-                + " #SunshineApp";
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        //intent.putExtra("subject", "The weather bring it to you by Sunshine app!");
-        intent.putExtra(Intent.EXTRA_TEXT, textToShare);
-        return  intent;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -59,12 +52,6 @@ public class DetailActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_share) {
-            Intent intent = getShareIntent();
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-                return true;
-            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -75,7 +62,12 @@ public class DetailActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private String mForecastString = null;
+        public static final String LOG_TAG = PlaceholderFragment.class.getSimpleName();
+        public static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
+
         public PlaceholderFragment() {
+            setHasOptionsMenu(true);
         }
 
         @Override
@@ -84,8 +76,35 @@ public class DetailActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent detailIntent = getActivity().getIntent();
             TextView detailText = (TextView) rootView.findViewById(R.id.detail_text);
-            detailText.setText(detailIntent.getStringExtra(Intent.EXTRA_TEXT));
+            mForecastString = detailIntent.getStringExtra(Intent.EXTRA_TEXT);
+            detailText.setText(mForecastString);
             return rootView;
+        }
+
+        private Intent getShareIntent() {
+            CharSequence textToShare = mForecastString + " " + FORECAST_SHARE_HASHTAG;
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            intent.setType("text/plain");
+            //intent.putExtra("subject", "The weather bring it to you by Sunshine app!");
+            intent.putExtra(Intent.EXTRA_TEXT, textToShare);
+            return  intent;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.detailfragment, menu);
+
+            MenuItem shareMenuItem = menu.findItem(R.id.action_share);
+
+            ShareActionProvider provider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(shareMenuItem);
+
+            if (provider != null) {
+                provider.setShareIntent(getShareIntent());
+            } else {
+                Log.d(LOG_TAG, "Share Action Provider is null?");
+            }
         }
     }
 }

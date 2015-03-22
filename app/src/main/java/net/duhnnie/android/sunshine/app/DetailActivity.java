@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,18 @@ public class DetailActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+
         return true;
+    }
+
+    private Intent getShareIntent() {
+        CharSequence textToShare = ((TextView) findViewById(R.id.detail_text)).getText()
+                + " #SunshineApp";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        //intent.putExtra("subject", "The weather bring it to you by Sunshine app!");
+        intent.putExtra(Intent.EXTRA_TEXT, textToShare);
+        return  intent;
     }
 
     @Override
@@ -47,6 +59,12 @@ public class DetailActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_share) {
+            Intent intent = getShareIntent();
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);

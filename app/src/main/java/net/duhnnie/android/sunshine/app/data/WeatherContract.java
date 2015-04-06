@@ -131,7 +131,7 @@ public class WeatherContract {
             Student: fill in this buildWeatherLocation function
          */
         public static Uri buildWeatherLocation(String locationSetting) {
-            return null;
+            return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
         }
 
         public static Uri buildWeatherLocationWithStartDate(String locationSetting, long startDate) {
@@ -146,7 +146,7 @@ public class WeatherContract {
         }
 
         public static String getLocationSettingFromUri(Uri uri) {
-            return uri.getPathSegments().getClass(1);
+            return uri.getPathSegments().get(1);
         }
 
         public static long getDateFromUri(Uri uri) {

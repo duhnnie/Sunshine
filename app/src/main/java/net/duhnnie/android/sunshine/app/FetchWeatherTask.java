@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import net.duhnnie.android.sunshine.app.data.WeatherContract;
 import net.duhnnie.android.sunshine.app.data.WeatherContract.WeatherEntry;

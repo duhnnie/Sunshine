@@ -1,5 +1,6 @@
 package net.duhnnie.android.sunshine.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
@@ -140,14 +141,15 @@ public class DetailActivity extends ActionBarActivity {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
             TextView textView = (TextView) getView().findViewById(R.id.detail_text);
+            Context ctx = getActivity();
             mForecast = "";
             if (cursor.getCount() > 0) {
                 Boolean isMetric = Utility.isMetric(getActivity());
                 cursor.moveToNext();
                 mForecast += Utility.formatDate(cursor.getLong(COL_WEATHER_DATE))
                     + " - " + cursor.getString(COL_WEATHER_DESC) + " - "
-                    + Utility.formatTemperature(cursor.getDouble(COL_WEATHER_MAX_TEMP), isMetric) + "/"
-                    + Utility.formatTemperature(cursor.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
+                    + Utility.formatTemperature(ctx, cursor.getDouble(COL_WEATHER_MAX_TEMP), isMetric) + "/"
+                    + Utility.formatTemperature(ctx, cursor.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
             }
             textView.setText(mForecast);
 

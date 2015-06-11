@@ -28,20 +28,30 @@ import java.util.Arrays;
 public class MainActivity extends ActionBarActivity {
 
     private String mLocation;
-    private static final String FORECASTFRAGMENT_TAG = "forecast_fragment";
+    private Boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocation = Utility.getPreferredLocation(this);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
+
+        if (findViewById(R.id.weather_detail_container) != null) {
+            // The details container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            //in two-pane mode
+            mTwoPane = true;
+            // In two-pane mode, show the detail fragment using a fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new DetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -55,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         String currentLocation = Utility.getPreferredLocation(this);
         if (currentLocation != null && !mLocation.equals(currentLocation)) {
-            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if (ff != null) {
                 ff.onLocationChanged();
             }

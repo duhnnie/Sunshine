@@ -1,6 +1,8 @@
 package net.duhnnie.android.sunshine.app;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -24,8 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
 
     private String mLocation;
     private Boolean mTwoPane;
@@ -65,12 +66,17 @@ public class MainActivity extends ActionBarActivity {
         super.onResume();
         String currentLocation = Utility.getPreferredLocation(this);
         if (currentLocation != null && !mLocation.equals(currentLocation)) {
-            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment_forecast);
             if (ff != null) {
                 ff.onLocationChanged();
             }
+            DetailFragment df = (DetailFragment) getSupportFragmentManager()
+                    .findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (df != null) {
+                df.onLocationChanged(currentLocation);
+            }
             mLocation = currentLocation;
-            Log.i("xxx", "changed");
         }
     }
 
@@ -88,5 +94,26 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onItemSelected(Uri dateUri) {
+        if (mTwoPane) {
+            DetailFragment df = new DetailFragment();
+
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, dateUri);
+
+            df.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, df, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(dateUri);
+            startActivity(intent);
+        }
+
+
     }
 }

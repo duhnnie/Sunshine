@@ -113,7 +113,5 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                     .setData(dateUri);
             startActivity(intent);
         }
-
-
     }
 }

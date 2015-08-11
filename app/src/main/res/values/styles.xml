@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/sunshine_blue</item>
         <item name="colorPrimaryDark">@color/sunshine_dark_blue</item>
+        <item name="android:padding">0dp</item>
     </style>
 
     <!-- Main activity theme -->

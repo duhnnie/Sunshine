@@ -39,6 +39,7 @@
         <provider
             android:authorities="net.duhnnie.android.sunshine.app"
             android:name="net.duhnnie.android.sunshine.app.data.WeatherProvider"/>
+        <service android:name=".service.SunshineService"/>
     </application>
 
 </manifest>

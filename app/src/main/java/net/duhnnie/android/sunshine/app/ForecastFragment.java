@@ -1,6 +1,7 @@
 package net.duhnnie.android.sunshine.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import net.duhnnie.android.sunshine.app.data.WeatherContract;
+import net.duhnnie.android.sunshine.app.service.SunshineService;
 
 /**
  * Created by duhnnie on 3/5/15.
@@ -103,9 +105,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        Context ctx = getActivity();
+        Intent intent = new Intent(ctx, SunshineService.class);
         String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, location);
+        ctx.startService(intent);
     }
 
     @Override

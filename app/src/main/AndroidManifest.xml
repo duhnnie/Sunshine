@@ -40,6 +40,7 @@
             android:authorities="net.duhnnie.android.sunshine.app"
             android:name="net.duhnnie.android.sunshine.app.data.WeatherProvider"/>
         <service android:name=".service.SunshineService"/>
+        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
     </application>
 
 </manifest>

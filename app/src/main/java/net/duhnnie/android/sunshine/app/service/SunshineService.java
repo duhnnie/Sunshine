@@ -1,14 +1,18 @@
 package net.duhnnie.android.sunshine.app.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Debug;
 import android.text.format.Time;
 import android.util.Log;
 
+import net.duhnnie.android.sunshine.app.Utility;
 import net.duhnnie.android.sunshine.app.data.WeatherContract;
 
 import org.json.JSONArray;
@@ -314,6 +318,15 @@ public class SunshineService extends IntentService {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
+        }
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent serviceIntent = new Intent(context, SunshineService.class);
+            serviceIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA));
+            context.startService(serviceIntent);
         }
     }
 }

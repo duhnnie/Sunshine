@@ -24,6 +24,8 @@ import android.widget.ListView;
 
 import net.duhnnie.android.sunshine.app.data.WeatherContract;
 import net.duhnnie.android.sunshine.app.service.SunshineService;
+import net.duhnnie.android.sunshine.app.sync.SunshineAuthenticatorService;
+import net.duhnnie.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
  * Created by duhnnie on 3/5/15.
@@ -108,7 +110,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        Context ctx = getActivity();
+        /*Context ctx = getActivity();
 
         AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(ctx, SunshineService.AlarmReceiver.class);
@@ -119,7 +121,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         PendingIntent alarmIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         //Set the AlarmManager to wake up the system.
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5 * 1000, alarmIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5 * 1000, alarmIntent);*/
+
+        SunshineSyncAdapter.syncImmediately(getActivity());
      }
 
     @Override

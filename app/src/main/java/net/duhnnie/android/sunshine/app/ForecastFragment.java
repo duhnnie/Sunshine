@@ -1,14 +1,9 @@
 package net.duhnnie.android.sunshine.app;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.app.LoaderManager;
@@ -23,8 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import net.duhnnie.android.sunshine.app.data.WeatherContract;
-import net.duhnnie.android.sunshine.app.service.SunshineService;
-import net.duhnnie.android.sunshine.app.sync.SunshineAuthenticatorService;
 import net.duhnnie.android.sunshine.app.sync.SunshineSyncAdapter;
 
 /**
@@ -110,19 +103,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        /*Context ctx = getActivity();
-
-        AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(ctx, SunshineService.AlarmReceiver.class);
-
-        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(ctx));
-
-        //Wrap in a pending intent which only fires once.
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(ctx, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        //Set the AlarmManager to wake up the system.
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5 * 1000, alarmIntent);*/
-
         SunshineSyncAdapter.syncImmediately(getActivity());
      }
 

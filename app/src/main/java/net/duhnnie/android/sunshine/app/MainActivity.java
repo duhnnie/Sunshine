@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import net.duhnnie.android.sunshine.app.sync.SunshineSyncAdapter;
+
 public class MainActivity extends ActionBarActivity implements ForecastFragment.Callback {
 
     private String mLocation;
@@ -37,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
 
         ((ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast)).setUseTodayLayout(!mTwoPane);
 
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
